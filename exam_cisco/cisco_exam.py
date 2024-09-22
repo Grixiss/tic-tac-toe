@@ -1,33 +1,32 @@
-"""display_board(board)
-    Process:
-        For each row in the board:
-            Print a row border.
-            Print the row with appropriate spacing and borders.
-        Print the final row border.
 
-import random
-
+#cisco range function final project
+"""
 from random import randrange
+
 for i in range(10):
     print(randrange(8))
 """
-import random
-
 board = [[1, 2, 3], [4, 'X', 6], [7, 8, 9]]
 
+
+#gestion update du board avec le move user
+def update_board(move):
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            if board[i][j] == move:
+                board[i][j] = "O"
+                return
+    return board
+
+#gestion des moves disponibles
+def list_of_free_fields(move):
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            if board[i][j] == move:  # Vérifier si la case contient encore le move (non "O" ou "X")
+                return True
+    return False
+
 def display_board(board, move) :
-    if move == 1 :
-        i = 0
-        j = 0
-        for row in board :
-            print("+-------"  + "+-------" + "+-------" + "+")
-            print("|       " + "|"+ "      " + " |"+ "      " + " |")
-            print("|   " + str(board[i][2]) + "   |   " + str(board[i][1]) + "   |   " + str(board[i][2]) + "   |")
-            print("|       " + "|"+ "      " + " |"+ "      " + " |")
-            i += 1
-            j += 1
-        print("+-------"*3 + "+")
-    else :
         i = 0
         j = 0
         for row in board :
@@ -46,12 +45,31 @@ def display_board(board, move) :
 def enter_move(board):
     while True:
         move = int(input("enter a number between 1 to 9 :"))
-        if  10 > move > 0  :
-            display_board(board, move)
+        if  10 > move > 0 :
+            #check is move in authorized
+            #list_of_free_fields(move,board)
+            if list_of_free_fields(move):
+                #update board
+                update_board(move)
+                #diplay update
+                display_board(board, move)
+                #break #exit if the move is OK
+            else :
+                print("Position has already taken. Choose another.")
+                #move = int(input("enter a number between 1 to 9 :"))
         else :
-            print("bad")
+            print("Invalid input. Please, enter a number between 1 and 9.")
 
 enter_move(board)
+
+
+def victory_for(board, sign):
+    # The function analyzes the board's status in order to check if
+    # the player using 'O's or 'X's has won the game
+
+def draw_move(board):
+    # The function draws the computer's move and updates the board.
+
 
 """
 2. enter_move(board)
@@ -79,3 +97,7 @@ enter_move(board)
         Return the list of free fields.
 
 4. victory_for(board, sign)"""
+
+
+
+
