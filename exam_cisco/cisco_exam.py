@@ -1,8 +1,7 @@
+from random import randrange
 
 #cisco range function final project
 """
-from random import randrange
-
 for i in range(10):
     print(randrange(8))
 """
@@ -10,7 +9,7 @@ board = [[1, 2, 3], [4, 'X', 6], [7, 8, 9]]
 
 
 #gestion update du board avec le move user
-def update_board(move):
+def update_board_user(move):
     for i in range(len(board)):
         for j in range(len(board[i])):
             if board[i][j] == move:
@@ -18,8 +17,16 @@ def update_board(move):
                 return
     return board
 
+def update_board_computer(move):
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            if board[i][j] == move:
+                board[i][j] = "X"
+                return
+    return board
+
 #gestion des moves disponibles
-def list_of_free_fields(move):
+def make_list_of_free_fields(move):
     for i in range(len(board)):
         for j in range(len(board[i])):
             if board[i][j] == move:  # Vérifier si la case contient encore le move (non "O" ou "X")
@@ -48,28 +55,74 @@ def enter_move(board):
         if  10 > move > 0 :
             #check is move in authorized
             #list_of_free_fields(move,board)
-            if list_of_free_fields(move):
+            if make_list_of_free_fields(move):
                 #update board
-                update_board(move)
+                update_board_user(move)
                 #diplay update
                 display_board(board, move)
-                #break #exit if the move is OK
             else :
                 print("Position has already taken. Choose another.")
                 #move = int(input("enter a number between 1 to 9 :"))
         else :
             print("Invalid input. Please, enter a number between 1 and 9.")
 
-enter_move(board)
 
 
 def victory_for(board, sign):
-    # The function analyzes the board's status in order to check if
-    # the player using 'O's or 'X's has won the game
+    # Horizontal check
+    for row in range(3):
+        if board[row][0] == board[row][1] == board[row][2] == sign:
+            return True
+
+    # Vertical check
+    for col in range(3):
+        if board[0][col] == board[1][col] == board[2][col] == sign:
+            return True
+
+    # diagonal from top left top bottom right
+    if board[0][0] == board[1][1] == board[2][2] == sign:
+        return True
+
+    # diagonal from top right to bottom left
+    if board[0][2] == board[1][1] == board[2][0] == sign:
+        return True
+    #last possibility, no winner
+    return False
+
+
 
 def draw_move(board):
-    # The function draws the computer's move and updates the board.
+        move = randrange(8)
+        if make_list_of_free_fields(move):
+            # update board
+            update_board_computer(move)
+            # diplay update
+            display_board(board, move)
 
+
+def play_game(board):
+    while True:
+        display_board(board, None)
+        enter_move(board)
+        if victory_for(board, 'O'):
+            display_board(board, None)
+            print("Congratulations! You win!")
+            break
+        if not make_list_of_free_fields(0):
+            display_board(board, None)
+            print("It's a tie!")
+            break
+        draw_move(board)
+        if victory_for(board, 'X'):
+            display_board(board, None)
+            print("The computer wins!")
+            break
+        if not make_list_of_free_fields(0):
+            display_board(board, None)
+            print("It's a tie!")
+            break
+
+play_game(board)
 
 """
 2. enter_move(board)
@@ -84,17 +137,6 @@ def draw_move(board):
             Check if the selected cell is empty:
                 If yes, place 'O' in the cell and break the loop.
                 If no, prompt the user to choose another cell.
-
-3. make_list_of_free_fields(board)
-
-    Input: Current board state.
-    Output: List of free cells in the format (row, column).
-    Process:
-        Initialize an empty list for free fields.
-        For each cell in the board:
-            If the cell is not occupied by 'O' or 'X':
-                Add the cell's (row, column) to the free fields list.
-        Return the list of free fields.
 
 4. victory_for(board, sign)"""
 
